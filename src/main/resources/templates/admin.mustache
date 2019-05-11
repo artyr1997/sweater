@@ -1,0 +1,32 @@
+<html>
+<body>
+<div>Welcome, Admin</div>
+{{#singIns}}
+    <div>
+        <i>{{login}}</i>
+        <i>{{password}}</i>
+    </div>
+{{/singIns}}
+
+<h3>Add new Categoty of Product</h3>
+
+<div>
+    <form method="post">
+        <input type="text" name="text" placeholder="Enter Message">
+        <input type="text" name="tag" placeholder="Tag">
+        <button type="submit">ADD</button>
+    </form>
+</div>
+
+<div>List of new Categories</div>
+{{#messages}}
+    <div>
+        <b>{{id}}</b>
+        <span>{{text}}</span>
+        <i>{{tag}}</i>
+    </div>
+{{/messages}}
+
+</body>
+
+</html>
