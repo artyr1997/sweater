@@ -1,13 +1,9 @@
 package com.exemple.sweater;
 
-import com.exemple.sweater.domain.Login;
 import com.exemple.sweater.domain.Message;
-import com.exemple.sweater.repos.LoginRepo;
 import com.exemple.sweater.repos.MessageRepo;
-import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,47 +14,8 @@ import java.util.*;
 public class GreetingController {
 
     @Autowired
-//    private LoginRepo loginRepo;
     private MessageRepo messageRepo;
 
-//    @GetMapping("/login")
-//    public String login(Map<String, Object> loginModel){
-//        Iterable<Login> singIns = loginRepo.findAll();
-//
-//        loginModel.put("singIns", singIns);
-//        return "login";
-//    }
-//
-//    @PostMapping
-//    public String addLogin (String login, String password, Map<String, Object> loginModel){
-//
-//        boolean loginWhile = true;
-//        for(;;){
-//            Login singIn = new Login(login, password);
-//
-//            loginRepo.save(singIn);
-//
-//            Iterable<Login> singIns = loginRepo.findAll();
-//
-//            loginModel.put("singIns", singIns);
-//            System.out.println(singIn.getLogin());
-//            System.out.println(singIn.getPassword());
-//            System.out.println(singIn.myLogin);
-//            System.out.println(singIn.myPassword);
-//            if (singIn.getLogin().contains(singIn.myLogin) && singIn.getPassword().contains(singIn.myPassword)) {
-//                return "profile";
-//
-//            }
-//            else if (singIn.getLogin().contains(singIn.adminLogin) && singIn.getPassword().contains(singIn.adminPassword)) {
-//                return "admin";
-//            }
-//            else {
-//                return "login";
-//            }
-//        }
-//
-//
-//    }
 
     @GetMapping("/greeting")
     public String greeting(
@@ -69,5 +26,42 @@ public class GreetingController {
         return "greeting";
     }
 
+    @GetMapping
+    public String main(Map<String, Object> model){
+        Iterable<Message> messages = messageRepo.findAll();
+        model.put("messages", messages);
+
+        return "main";
+
+    }
+
+    @PostMapping
+    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model){
+        Message message = new Message(text, tag);
+
+        messageRepo.save(message);
+
+        Iterable<Message> messages = messageRepo.findAll();
+        model.put("messages", messages);
+
+
+        return "main";
+    }
+
+    @PostMapping("filter")
+    public String filter(@RequestParam String filter, Map<String, Object> model){
+        Iterable<Message> messages;
+
+        if (filter != null && !filter.isEmpty()){
+            messages = messageRepo.findByTag(filter);
+        }
+        else {
+            messages = messageRepo.findAll();
+        }
+
+        model.put("messages", messages);
+
+        return "main";
+    }
 
 }
